@@ -5,9 +5,9 @@ import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Providers } from "@/components/providers"
-// import { SiteBlob } from "@/components/site-blob"
-// import { SiteFooter } from "@/components/site-footer"
-// import { SiteHeader } from "@/components/site-header"
+import { SiteBlob } from "@/components/site-blob"
+import { SiteFooter } from "@/components/site-footer"
+import { SiteHeader } from "@/components/site-header"
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -33,7 +33,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           )}
         >
           <div className="relative flex min-h-screen flex-col">
+            <SiteHeader/>
+            <SiteBlob/>
             <div className="flex-1">{children}</div>
+            <SiteFooter/>
           </div>
         </body>
       </html>
