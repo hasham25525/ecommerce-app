@@ -13,8 +13,9 @@ import { ThemeToggle } from "@/components/theme-toggle"
 export function SiteHeader() {
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams();
-const defaultSearchQuery=searchParams.get('search') ?? ""
+  const searchParams = useSearchParams()
+  const { cartCount } = useShoppingCart()
+  const defaultSearchQuery = searchParams.get("search") ?? ""
 
   if (pathname.startsWith("/studio")) return null // hides the component
 
@@ -47,7 +48,7 @@ const defaultSearchQuery=searchParams.get('search') ?? ""
           <Link href="/cart">
             <Button size="sm" variant="ghost">
               <ShoppingBag className="h-5 w-5" />
-              <span className="ml-2 text-sm font-bold">0</span>
+              <span className="ml-2 text-sm font-bold">{cartCount}</span>
               <span className="sr-only">Cart</span>
             </Button>
           </Link>
