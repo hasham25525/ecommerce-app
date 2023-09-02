@@ -69,7 +69,7 @@ export function CartItems() {
                 </p>
                 <p className="mt-1 text-sm font-medium">
                   Size: {/* @ts-ignore */}
-                  <strong>{getSizeName(product.price_data?.size)}</strong>
+                  <strong>{getSizeName(product.product_data?.size)}</strong>
                 </p>
               </div>
 
