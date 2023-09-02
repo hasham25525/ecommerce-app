@@ -18,7 +18,7 @@ export default function Page() {
             <CartItems />
           </section>
           {/* Cart Summary */}
-          <CartSummary/>
+          <CartSummary />
         </form>
       </main>
     </div>
