@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { urlForImage } from "@/sanity/lib/image"
+import { product } from "@/sanity/schemas/product-schema"
 import { Clock, X } from "lucide-react"
 import { formatCurrencyString, useShoppingCart } from "use-shopping-cart"
 import { Product } from "use-shopping-cart/core"
@@ -11,25 +12,38 @@ import { shimmer, toBase64 } from "@/lib/image"
 import { getSizeName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useToast } from "@/components/ui/use-toast"
+import { toast, useToast } from "@/components/ui/use-toast"
 import { CartItemsEmpty } from "@/components/cart-items-empty"
 
 export function CartItems() {
-  function removeCartItem() {}
+  const { cartDetails, setItemQuantity, removeItem } = useShoppingCart()
+  const cartItems = Object.entries(cartDetails!).map(([_, product]) => product)
+  const { toast } = useToast()
+
+  function removeCartItem(product: Product) {
+    removeItem(product.id)
+    toast({
+      title: `${product.name} removed`,
+      description: "Product removed from cart",
+      variant:"destructive"
+    })
+  }
+
+  if (cartItems.length == 0) return <CartItemsEmpty />
 
   return (
     <ul
       role="list"
       className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-500 dark:border-gray-500"
     >
-      {[].map((product, productIdx) => (
-        <li key={"key"} className="flex py-6 sm:py-10">
+      {cartItems.map((product, productIdx) => (
+        <li key={product._id} className="flex py-6 sm:py-10">
           <div className="shrink-0">
             <Image
-              src={"src"}
-              alt={"alt"}
-              width={0}
-              height={0}
+              src={urlForImage(product.images[0]).url()}
+              alt={product.name}
+              width={200}
+              height={200}
               className="h-24 w-24 rounded-md border-2 border-gray-200 object-cover object-center dark:border-gray-800 sm:h-48 sm:w-48"
             />
           </div>
@@ -39,15 +53,23 @@ export function CartItems() {
               <div>
                 <div className="flex justify-between">
                   <h3 className="text-sm">
-                    <Link href={`/products/slug`} className="font-medium">
-                      Name
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="font-medium"
+                    >
+                      {product.name}
                     </Link>
                   </h3>
                 </div>
-                <p className="mt-1 text-sm font-medium">Price</p>
+                <p className="mt-1 text-sm font-medium">
+                  {formatCurrencyString({
+                    value: product.price,
+                    currency: product.currency,
+                  })}
+                </p>
                 <p className="mt-1 text-sm font-medium">
                   Size: {/* @ts-ignore */}
-                  <strong>Size</strong>
+                  <strong>{getSizeName(product.price_data?.size)}</strong>
                 </p>
               </div>
 
@@ -60,12 +82,21 @@ export function CartItems() {
                   name={`quantity-${productIdx}`}
                   type="number"
                   className="w-16"
+                  min={1}
+                  max={10}
+                  value={product.quantity}
+                  onChange={(e) =>
+                    setItemQuantity(product.id, Number(e.target.value))
+                  }
                 />
                 <div className="absolute right-0 top-0">
                   <Button
                     variant="ghost"
                     type="button"
                     className="-mr-2 inline-flex p-2"
+                    onClick={() => {
+                      removeCartItem(product)
+                    }}
                   >
                     <span className="sr-only">Remove</span>
                     <X className="h-5 w-5" aria-hidden="true" />
