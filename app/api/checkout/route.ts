@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     payment_method_types: ["card"],
     line_items: lineItems,
     shipping_address_collection: {
-      allowed_countries: ["US"],
+      allowed_countries: ["US","PK"],
     },
     shipping_options: [
       {
