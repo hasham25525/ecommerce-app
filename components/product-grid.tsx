@@ -43,7 +43,10 @@ export function ProductGrid({products}:Props) {
             />
           </div>
           <h3 className="mt-4 font-medium">{product.name}</h3>
-          <p className="mt-2 font-medium">{product.price}</p>
+          <p className="mt-2 font-medium">          {formatCurrencyString({
+            value: product.price,
+            currency: product.currency,
+          })}</p>
         </Link>
       ))}
     </div>
